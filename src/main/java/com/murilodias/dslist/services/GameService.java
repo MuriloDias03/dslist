@@ -3,6 +3,7 @@ package com.murilodias.dslist.services;
 import com.murilodias.dslist.dto.GameDTO;
 import com.murilodias.dslist.dto.GameMinDTO;
 import com.murilodias.dslist.entities.Game;
+import com.murilodias.dslist.projections.GameMinProjection;
 import com.murilodias.dslist.repositories.GameRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -26,5 +27,11 @@ public class GameService {
     public GameDTO findById(Long id) {
         Game result = gameRepository.findById(id).get();
         return new GameDTO(result);
+    }
+
+    @Transactional(readOnly = true)
+    public List<GameMinDTO> findByList(Long listId) {
+        List<GameMinProjection> result = gameRepository.searchByList(listId);
+        return result.stream().map(GameMinDTO::new).toList();
     }
 }
